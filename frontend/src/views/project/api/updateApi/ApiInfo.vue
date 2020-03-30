@@ -230,7 +230,7 @@
                             self.parameterType = data.requestParameterType;
                             self.parameter = data.requestParameter;
                             try {
-                                self.parameterRaw = data.requestParameterRaw[0].data;
+                                self.parameterRaw = data.requestParameterRaw.data;
                             } catch (e){
 
                             }
@@ -253,6 +253,9 @@
             formatChange() {
             },
             changFormat() {
+                let demo = document.getElementsByTagName('pre')[0];
+                console.log(demo)
+                hljs.highlightBlock(demo);
                 this.resultShow = !this.resultShow
             },
             lookParameterInfo(index) {

@@ -26,17 +26,55 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     sessionStorage.removeItem('token');
   }
-  let token = JSON.parse(sessionStorage.getItem('token'));
-  if (!token && to.path !== '/login') {
+  let token = sessionStorage.getItem('token');
+  if (token === 'undefined'){
+      token = ''
+  }
+
+  if (!token && to.path === '/register') {
+      next()
+  }
+  else if (!token && to.path !== '/login') {
     console.log(to.path);
     next({ path: '/login', query: {url: to.path}})
-  } else {
+  }
+  else {
     next()
   }
   if (to.path === '/') {
     next({ path: '/projectList',})
   }
 });
+
+
+let Highlight = {};
+Highlight.install = function (Vue, options) {
+    // 先有数据再绑定，调用highlightA
+    Vue.directive('highlightA', {
+        inserted: function(el) {
+            let blocks = el.querySelectorAll('pre code');
+            for (let i = 0; i < blocks.length; i++) {
+              console.log(blocks)
+                console.log(blocks[i])
+                const item = blocks[i];
+                console.log(item)
+                hljs.highlightBlock(item);
+            };
+        }
+    });
+    // 先绑定，后面会有数据更新，调用highlightB
+    Vue.directive('highlightB', {
+        componentUpdated: function(el) {
+            let blocks = el.querySelectorAll('pre code');
+            for (let i = 0; i < blocks.length; i++) {
+                const item = blocks[i];
+                hljs.highlightBlock(item);
+            };
+        }
+    });
+};
+
+Vue.use(Highlight);
 
 //router.afterEach(transition => {
 //NProgress.done();
